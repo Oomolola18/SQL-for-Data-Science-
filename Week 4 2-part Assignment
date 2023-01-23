@@ -1,0 +1,148 @@
+Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset Coursera Worksheet
+
+This is a 2-part assignment.
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+
+Records (No of rows) : Total no of records
+--------------------------------------------------
+SQL code solution
+Select COUNT(*)
+FROM table_name;
+
+---------------------------------------------------
+
+i. Attribute table = 10000
+ii. Business table = 10000
+iii. Category table = 10000
+iv. Checkin table = 10000
+v. elite_years table = 10000
+vi. friend table = 10000
+vii. hours table = 10000
+viii. photo table = 10000
+ix. review table = 10000
+x. tip table = 10000
+xi. user table = 10000
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+--------------------------------------
+SQL code solution
+Select COUNT(DISTINCT primary_key or foreign_key)
+FROM table_name;
+
+--------------------------------------
+i. Business = 10000
+
+Select COUNT(DISTINCT id)
+FROM Business;
+
+--------------------------------------
+ii. Hours = 1562 
+
+Select COUNT(DISTINCT business_id)
+FROM Hours;
+
+--------------------------------------
+iii. Category = 2643 
+
+Select COUNT(DISTINCT business_id)
+FROM Category;
+
+---------------------------------------
+iv. Attribute = 1115
+
+Select COUNT(DISTINCT business_id)
+FROM Attribute;
+
+---------------------------------------
+v. Review =  10000
+
+Select COUNT(DISTINCT id)
+FROM Review;
+
+----------------------------------------
+vi. Checkin = 493
+
+Select COUNT(DISTINCT business_id)
+FROM Checkin;
+
+-------------------------------------------
+vii. Photo = 10000
+
+Select COUNT(DISTINCT id)
+FROM Photo;
+
+--------------------------------------------
+viii. Tip = 537
+
+Select COUNT(DISTINCT user_id)
+FROM Tip;
+
+---------------------------------------------
+ix. User = 10000 
+
+Select COUNT(DISTINCT id)
+FROM User;
+
+----------------------------------------------
+x. Friend = 9415
+
+Select COUNT(DISTINCT friend_id)
+FROM Friend;
+
+-----------------------------------------------
+xi. Elite_years = 2780
+
+Select COUNT(DISTINCT user_id)
+FROM Elite_years;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: No
+	
+	SQL code used to arrive at answer:
+select *
+FROM User
+Where name is NULL;  --repeat the Where statement for each column_name
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+SQL code used to arrive at answer:
+Select MIN(column_name) AS min_column_name,
+MAX(column_name) AS max_column_name,
+AVG(column_name) AS avg_column_name
+FROM table_name;
+
+	i. Table: Review, Column: Stars
+	
+		min: 1		max:	5	avg: 3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min: 1.0		max:	5.0	avg: 3.6549
+		
+	
+	iii. Table: Tip, Column: Likes
+	
+		min:	 0 	max:	 2 	avg:  0.0144
+		
+	
+	iv. Table: Checkin, Column: Count
+	
+		min:	1	max:	 53	avg:  1.9414
+		
+	
+	v. Table: User, Column: Review_count
+	
+		min:	0 	max:	2000 	avg: 24.2995
+		
