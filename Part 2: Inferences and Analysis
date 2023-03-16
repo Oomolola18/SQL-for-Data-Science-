@@ -1,0 +1,145 @@
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. 
+Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. Include your code.
+	
+i. Do the two groups you chose to analyze have a different distribution of hours?
+Yes
+4-5stars - have 2 businesses Red Rock Canyon Visitor Center opens Monday to Sunday 8:00-16:30  & Desert Medical Equipment only opens Monday to Friday 8:00-17:00 
+2-3stars - have 2 businesses Wooly Wonders which opens only Monday-Saturday and has alternating opening times 10:00-16:00 and 10:00-19:00  & Walgreens Monday to Sunday 8:00-22:00.
+
+ii. Do the two groups you chose to analyze have a different number of reviews?
+ Yes - both groups have different reviews
+ Seems as Red Rock Canyon Visitor Center is quite liked as it has the highest reviews and star ratings.
+         
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+
+SQL code used for analysis:
+select 
+CASE
+    WHEN stars>=4 THEN '4-5stars'
+    WHEN (stars>=2 OR stars<=3) THEN '2-3stars'
+    ELSE 'N/A'
+END as star_ratings,
+
+name,
+city, 
+postal_code,
+review_count,
+hours,
+category
+from business b
+INNER JOIN category c ON b.id =c.business_id
+INNER JOIN hours h ON c.business_id = h.business_id 
+
+Where City ='Las Vegas' AND
+Category = 'Shopping'
+AND (stars>=4 OR (stars>=2 OR stars<=3))
+Order by star_ratings DESC
+
+
++--------------+--------------------------------+-----------+-------------+--------------+-----------------------+----------+
+| star_ratings | name                           | city      | postal_code | review_count | hours                 | category |
++--------------+--------------------------------+-----------+-------------+--------------+-----------------------+----------+
+| 4-5stars     | Red Rock Canyon Visitor Center | Las Vegas | 89161       |           32 | Monday|8:00-16:30     | Shopping |
+| 4-5stars     | Red Rock Canyon Visitor Center | Las Vegas | 89161       |           32 | Tuesday|8:00-16:30    | Shopping |
+| 4-5stars     | Red Rock Canyon Visitor Center | Las Vegas | 89161       |           32 | Friday|8:00-16:30     | Shopping |
+| 4-5stars     | Red Rock Canyon Visitor Center | Las Vegas | 89161       |           32 | Wednesday|8:00-16:30  | Shopping |
+| 4-5stars     | Red Rock Canyon Visitor Center | Las Vegas | 89161       |           32 | Thursday|8:00-16:30   | Shopping |
+| 4-5stars     | Red Rock Canyon Visitor Center | Las Vegas | 89161       |           32 | Sunday|8:00-16:30     | Shopping |
+| 4-5stars     | Red Rock Canyon Visitor Center | Las Vegas | 89161       |           32 | Saturday|8:00-16:30   | Shopping |
+| 4-5stars     | Desert Medical Equipment       | Las Vegas | 89118       |            4 | Friday|8:00-17:00     | Shopping |
+| 4-5stars     | Desert Medical Equipment       | Las Vegas | 89118       |            4 | Tuesday|8:00-17:00    | Shopping |
+| 4-5stars     | Desert Medical Equipment       | Las Vegas | 89118       |            4 | Thursday|8:00-17:00   | Shopping |
+| 4-5stars     | Desert Medical Equipment       | Las Vegas | 89118       |            4 | Wednesday|8:00-17:00  | Shopping |
+| 4-5stars     | Desert Medical Equipment       | Las Vegas | 89118       |            4 | Monday|8:00-17:00     | Shopping |
+| 2-3stars     | Wooly Wonders                  | Las Vegas | 89121       |           11 | Monday|10:00-16:00    | Shopping |
+| 2-3stars     | Wooly Wonders                  | Las Vegas | 89121       |           11 | Tuesday|10:00-19:00   | Shopping |
+| 2-3stars     | Wooly Wonders                  | Las Vegas | 89121       |           11 | Friday|10:00-16:00    | Shopping |
+| 2-3stars     | Wooly Wonders                  | Las Vegas | 89121       |           11 | Wednesday|10:00-16:00 | Shopping |
+| 2-3stars     | Wooly Wonders                  | Las Vegas | 89121       |           11 | Thursday|10:00-19:00  | Shopping |
+| 2-3stars     | Wooly Wonders                  | Las Vegas | 89121       |           11 | Saturday|10:00-16:00  | Shopping |
+| 2-3stars     | Walgreens                      | Las Vegas | 89121       |            6 | Monday|8:00-22:00     | Shopping |
+| 2-3stars     | Walgreens                      | Las Vegas | 89121       |            6 | Tuesday|8:00-22:00    | Shopping |
+| 2-3stars     | Walgreens                      | Las Vegas | 89121       |            6 | Friday|8:00-22:00     | Shopping |
+| 2-3stars     | Walgreens                      | Las Vegas | 89121       |            6 | Wednesday|8:00-22:00  | Shopping |
+| 2-3stars     | Walgreens                      | Las Vegas | 89121       |            6 | Thursday|8:00-22:00   | Shopping |
+| 2-3stars     | Walgreens                      | Las Vegas | 89121       |            6 | Sunday|8:00-22:00     | Shopping |
+| 2-3stars     | Walgreens                      | Las Vegas | 89121       |            6 | Saturday|8:00-22:00   | Shopping |
++--------------+--------------------------------+-----------+-------------+--------------+-----------------------+----------+
+
+
+
+
+
+
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
+		
+i. Difference 1: avg_stars : Open = 3.7
+                             Closed = 3.5
+              
+         
+ii. Difference 2: avg_reviews : Open = 31.8
+                             Closed = 23.2
+         
+         
+SQL code used for analysis:
+select 
+count(distinct id) as num_of_business,
+avg(stars) as avg_stars,
+avg(review_count) as avg_reviews,
+is_open
+FROM business
+Group by is_open;
+	
++-----------------+---------------+---------------+---------+
+| num_of_business |     avg_stars |   avg_reviews | is_open |
++-----------------+---------------+---------------+---------+
+|            1520 | 3.52039473684 | 23.1980263158 |       0 |
+|            8480 | 3.67900943396 | 31.7570754717 |       1 |
++-----------------+---------------+---------------+---------+  
+  
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do: Determine the most successful businesses in business category by star ratings
+         
+         
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+ For this analysis, I will need id, city, stars, review_count from business table and category from the category table.
+ Next, count the number of businesses and  average star rating for each category, also find check if there is a correlation with the total number of reviews.
+ Lastly, to determine the most successful businesses - limit the result by only returning categories with at least 10 businesses and average star rating 3.5.
+                  
+iii. Output of your finished dataset:
+      +-------------------+------------------------+---------------+-----------+---------------+
+| num_of_businesses | category               | city          | avg_stars | total_reviews |
++-------------------+------------------------+---------------+-----------+---------------+
+|                10 | Active Life            | Cottage Grove |       4.2 |           131 |
+|                12 | Local Services         | Mississauga   |       4.2 |           100 |
+|                17 | Health & Medical       | Peoria        |       4.1 |           203 |
+|                16 | Home Services          | Scottsdale    |       4.0 |            94 |
+|                30 | Shopping               | Mississauga   |       4.0 |           977 |
+|                13 | Beauty & Spas          | Charlotte     |       3.9 |           119 |
+|                11 | American (Traditional) | Phoenix       |       3.8 |          1128 |
+|                23 | Food                   | Toronto       |       3.8 |          1781 |
+|              9816 | None                   | Phoenix       |       3.7 |        297464 |
+|                17 | Bars                   | Montréal      |       3.5 |          1322 |
+|                20 | Nightlife              | Montréal      |       3.5 |          1351 |
+|                71 | Restaurants            | Toronto       |       3.5 |          4504 |
++-------------------+------------------------+---------------+-----------+---------------+  
+         
+iv. Provide the SQL code you used to create your final dataset:
+
+SELECT 
+COUNT(Distinct(b.id)) AS num_of_businesses,
+c.category,
+ b.city,
+ROUND(AVG(b.stars),1) as avg_stars, 
+SUM (b.review_count) as total_reviews
+FROM business b 
+LEFT JOIN category c
+ON b.id = c.business_id
+Group by category
+HAVING num_of_businesses >= 10 AND avg_stars >= 3.5
+ORDER BY avg_stars DESC
